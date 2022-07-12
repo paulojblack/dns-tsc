@@ -1,13 +1,13 @@
 {
   "name": "dns-tsc",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "lint": "eslint .",
-    "start": "ts-node src/dns.ts",
-    "start:watch": "nodemon src/dns.ts"
+    "start": "ts-node src/index.ts",
+    "start:watch": "nodemon src/index.ts"
   },
   "dependencies": {
     "@types/node": "^18.0.3",
