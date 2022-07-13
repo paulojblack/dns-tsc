@@ -1,6 +1,8 @@
+exports = {}
 // https://www.npmjs.com/package/dns-packet
-const { Resolver } = require('dns').promises
-const commander = require('commander');
+const { Resolver } =  require('dns').promises
+const commander = require('commander')
+const ora = require('ora')
 
 let resourceRecords: Array<string> = ['A', 'AAAA', 'ANY', 'CAA', 'CNAME', 'MX', 'NAPTR', 'NS', 'PTR', 'SOA', 'SRV', 'TXT'];
 interface CLIOpts {
@@ -37,7 +39,10 @@ async function resolveDNS (domain: string, recordType: string, opts: CLIOpts) {
     let result;
 
     try {
+        const spinner = ora(`Resolving ${domain}`) // Produce ora CLI spinner while resolving DNS
+        spinner.start()
         result = await resolver.resolve(domain, recordType);
+        spinner.stop()
     } catch(e: any) {
         throw new Error(e)
     }
