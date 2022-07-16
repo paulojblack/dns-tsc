@@ -1,4 +1,4 @@
-const { Resolver } =  require('dns').promises
+const dns =  require('dns').promises
 const commander = require('commander');
 
 let resourceRecords: Array<string> = ['A', 'AAAA', 'ANY', 'CAA', 'CNAME', 'MX', 'NAPTR', 'NS', 'PTR', 'SOA', 'SRV', 'TXT'];
@@ -22,19 +22,37 @@ function cli() {
         .action(async (domain: string, recordType: string, opts: CLIOpts): Promise<void> => {
             let result = await resolveDNS(domain, recordType, opts.nameServer);
             console.log(result)
+        })
 
+    program.command('reverse')
+        .description('Reverse DNS query to resolve an IP into a list of host names')
+        .addArgument(new commander.Argument('[ip]', 'IP to resolve'))
+        .action(async (ip: string): Promise<void> => {
+            let result = await reverseDNS(ip);
+            console.log(result)
         })
         
     program.parse()
 }
 
 async function resolveDNS (domain: string, recordType: string = 'ANY', nameServer: string = '8.8.8.8') {
-    let resolver = new Resolver();
+    let resolver = new dns.Resolver();
     resolver.setServers([nameServer]);
     
     let result;
     try {
         result = await resolver.resolve(domain, recordType);
+    } catch(e: any) {
+        throw new Error(e)
+    }
+
+    return result;
+}
+
+async function reverseDNS (ip: string) {
+    let result;
+    try {
+        result = await dns.reverse(ip);
     } catch(e: any) {
         throw new Error(e)
     }
